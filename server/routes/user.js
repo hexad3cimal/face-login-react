@@ -35,8 +35,12 @@ router.post('/login', async function(req, res, next) {
         new faceapi.LabeledFaceDescriptors(user.email,[new Float32Array(user.descriptors)]),
       ];
       const faceMatcher =  new faceapi.FaceMatcher(labeledDescriptor);
+      const match = faceMatcher.findBestMatch(req.body.descriptors);
+      if(match._label===req.body.email) return res.status(200).json({"data": user})
+
     }
-    return res.status(200).json({"data": user})
+   res.status(401).json({"data": "error"})
+
   }catch(e){
     console.log(e)
     next(e)
